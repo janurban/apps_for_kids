@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Dělení s medvědem</title>
+    <title>Matematika s medvědem</title>
     
     <!-- PWA / Web App Manifest & iOS meta -->
     <meta name="mobile-web-app-capable" content="yes">
@@ -170,7 +170,14 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 8px;
-            margin: 12px 0;
+            margin: 8px 0 16px 0;
+        }
+
+        .difficulty-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 8px 0 16px 0;
         }
 
         .btn-option {
@@ -182,12 +189,38 @@
             font-weight: 800;
             color: #334155;
             cursor: pointer;
+            text-align: center;
         }
 
-        .btn-option.active {
+        .btn-option-diff {
+            padding: 10px 12px;
+            background: #f8fafc;
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: #334155;
+            cursor: pointer;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .btn-option-diff .diff-desc {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        .btn-option.active, .btn-option-diff.active {
             background: #f59e0b;
             color: #ffffff;
             border-color: #d97706;
+        }
+
+        .btn-option-diff.active .diff-desc {
+            color: #fef3c7;
         }
 
         /* Inputs */
@@ -197,13 +230,14 @@
             border-radius: 16px;
             padding: 16px;
             margin: 16px 0;
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 900;
             color: #451a03;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
+            flex-wrap: wrap;
         }
 
         .input-group {
@@ -215,7 +249,7 @@
         }
 
         .input-box {
-            width: 75px;
+            width: 80px;
             height: 60px;
             text-align: center;
             font-size: 1.8rem;
@@ -273,8 +307,8 @@
         <div class="header-brand" id="btnLogoHome">
             <div class="logo-box">🐻</div>
             <div class="title-container">
-                <h1>Dělení s medvědem</h1>
-                <p>Procvičování se zbytkem</p>
+                <h1>Matematika s medvědem</h1>
+                <p id="txtSubHeader">Procvičování dělení a dělitelů</p>
             </div>
         </div>
         <div id="headerProgress" class="round-counter hidden">
@@ -288,7 +322,7 @@
         <!-- STAGE 1: SETUP SCREEN -->
         <section id="stageSetup" class="card">
             <div class="animate-float" style="margin-bottom: 12px;">
-                <svg viewBox="0 0 200 200" style="width: 120px; height: 120px;">
+                <svg viewBox="0 0 200 200" style="width: 100px; height: 100px;">
                     <circle cx="40" cy="45" r="28" fill="#b45309" />
                     <circle cx="40" cy="45" r="16" fill="#fde047" />
                     <circle cx="160" cy="45" r="28" fill="#b45309" />
@@ -307,9 +341,29 @@
             </div>
 
             <h2 style="color: #451a03; margin-bottom: 6px;">Ahoj kamaráde!</h2>
-            <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 12px;">Pojďme si procvičit dělení se zbytkem.</p>
+            <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">Vyber si obtížnost a pojďme na to.</p>
 
-            <div style="background: #fffbeb; padding: 12px; border-radius: 16px; border: 2px solid #fde047;">
+            <!-- VYBER OBTÍŽNOSTI -->
+            <div style="background: #fffbeb; padding: 10px; border-radius: 16px; border: 2px solid #fde047; margin-bottom: 10px; text-align: left;">
+                <label style="font-size: 0.8rem; font-weight: 800; color: #78350f; display: block; text-align: center; margin-bottom: 6px;">VYBER OBTÍŽNOST:</label>
+                <div class="difficulty-grid">
+                    <button type="button" data-diff="1" class="btn-option-diff active">
+                        <span>1 – Lehké (Dělení se zbytkem)</span>
+                        <span class="diff-desc">Hledáš podíl a zbytek po dělení</span>
+                    </button>
+                    <button type="button" data-diff="2" class="btn-option-diff">
+                        <span>2 – Středně těžké (2 čísla)</span>
+                        <span class="diff-desc">Hledáš největší společný dělitel</span>
+                    </button>
+                    <button type="button" data-diff="3" class="btn-option-diff">
+                        <span>3 – Nejtěžší (1 číslo)</span>
+                        <span class="diff-desc">Hledáš největší dělitel (mezi 1 a 12)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- VYBER POČTU PŘÍKLADŮ -->
+            <div style="background: #fffbeb; padding: 10px; border-radius: 16px; border: 2px solid #fde047;">
                 <label style="font-size: 0.8rem; font-weight: 800; color: #78350f;">KOLIK CHCEŠ PŘÍKLADŮ?</label>
                 <div class="round-grid">
                     <button type="button" data-rounds="5" class="btn-option active">5</button>
@@ -326,18 +380,15 @@
         <!-- STAGE 2: GAMEPLAY SCREEN -->
         <section id="stageGame" class="card hidden">
             
-            <div class="math-display">
-                <span id="txtDividend">17</span>
-                <span style="color: #d97706;">:</span>
-                <span id="txtDivisor">5</span>
-                <span style="color: #d97706;">=</span>
-                <span style="color: #94a3b8;">?</span>
+            <p id="txtTaskInstruction" style="font-size: 0.85rem; font-weight: 800; color: #b45309; margin-bottom: 4px;"></p>
+
+            <div class="math-display" id="boxMathDisplay">
+                <!-- Dynamicky generováno -->
             </div>
 
             <div id="boxQuestionInputs">
-                <p style="font-size: 0.8rem; font-weight: 800; color: #64748b; margin-bottom: 8px;">DOPLŇ PODÍL A ZBYTEK:</p>
-
-                <div class="input-group">
+                <!-- ÚROVEŇ 1 INPUTS -->
+                <div id="inputsDiff1" class="input-group">
                     <div style="display: flex; flex-direction: column; align-items: center;">
                         <input type="number" pattern="[0-9]*" inputmode="numeric" id="inputQuotient" class="input-box" placeholder="?">
                         <span class="input-label">Podíl</span>
@@ -351,6 +402,14 @@
                     </div>
 
                     <span style="font-size: 1.5rem; font-weight: 800; color: #475569;">)</span>
+                </div>
+
+                <!-- ÚROVEŇ 2 & 3 INPUT -->
+                <div id="inputsSingle" class="input-group hidden">
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                        <input type="number" pattern="[0-9]*" inputmode="numeric" id="inputSingleAnswer" class="input-box" placeholder="?">
+                        <span class="input-label" id="lblSingleInput">Největší dělitel</span>
+                    </div>
                 </div>
 
                 <button id="btnSubmitAnswer" class="btn btn-green">
@@ -398,7 +457,7 @@
     </main>
 
     <footer>
-        Dělení s medvědem &bull; Offline aplikace
+        Matematika s medvědem &bull; Offline aplikace
     </footer>
 
     <!-- Canvas Pro Fireworks / Efekty bez externích knihoven -->
@@ -407,13 +466,22 @@
     <script>
         // GAME STATE
         const state = {
+            difficulty: 1, // 1, 2, or 3
             totalRounds: 5,
             currentRound: 1,
             score: 0,
+            
+            // Diff 1 State
             dividend: 17,
             divisor: 5,
             quotient: 3,
             remainder: 2,
+
+            // Diff 2 & 3 State
+            numA: 0,
+            numB: 0,
+            correctAnswer: 0,
+
             isRoundAnswered: false
         };
 
@@ -426,11 +494,19 @@
             stageGame: document.getElementById('stageGame'),
             stageSummary: document.getElementById('stageSummary'),
             btnStartGame: document.getElementById('btnStartGame'),
-            txtDividend: document.getElementById('txtDividend'),
-            txtDivisor: document.getElementById('txtDivisor'),
+            
+            txtTaskInstruction: document.getElementById('txtTaskInstruction'),
+            boxMathDisplay: document.getElementById('boxMathDisplay'),
             boxQuestionInputs: document.getElementById('boxQuestionInputs'),
+            
+            inputsDiff1: document.getElementById('inputsDiff1'),
             inputQuotient: document.getElementById('inputQuotient'),
             inputRemainder: document.getElementById('inputRemainder'),
+            
+            inputsSingle: document.getElementById('inputsSingle'),
+            inputSingleAnswer: document.getElementById('inputSingleAnswer'),
+            lblSingleInput: document.getElementById('lblSingleInput'),
+
             btnSubmitAnswer: document.getElementById('btnSubmitAnswer'),
             panelFeedback: document.getElementById('panelFeedback'),
             boxBearFeedbackSvg: document.getElementById('boxBearFeedbackSvg'),
@@ -444,6 +520,19 @@
             txtFinalAccuracy: document.getElementById('txtFinalAccuracy'),
             btnPlayAgain: document.getElementById('btnPlayAgain')
         };
+
+        // HELPER MATH FUNCTIONS
+        function gcd(a, b) {
+            return b === 0 ? a : gcd(b, a % b);
+        }
+
+        // Najde největšího dělitele čísla 'n' menšího než 'n' (vlastní dělitel)
+        function getGreatestProperDivisor(n) {
+            for (let i = n - 1; i >= 1; i--) {
+                if (n % i === 0) return i;
+            }
+            return 1;
+        }
 
         // LARGE SVG VECTOR BEARS (Thumbs up / Thumbs down)
         const SVG_BEARS = {
@@ -484,6 +573,17 @@
 
         // INIT & EVENT LISTENERS
         function init() {
+            // Difficulty Selection
+            document.querySelectorAll('.btn-option-diff').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.btn-option-diff').forEach(b => b.classList.remove('active'));
+                    const target = e.currentTarget;
+                    target.classList.add('active');
+                    state.difficulty = parseInt(target.getAttribute('data-diff'));
+                });
+            });
+
+            // Rounds Selection
             document.querySelectorAll('.btn-option').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     document.querySelectorAll('.btn-option').forEach(b => b.classList.remove('active'));
@@ -506,41 +606,150 @@
             dom.stageSummary.classList.add('hidden');
             dom.stageGame.classList.remove('hidden');
             dom.headerProgress.classList.remove('hidden');
+
+            // Setup input forms based on difficulty
+            if (state.difficulty === 1) {
+                dom.inputsDiff1.classList.remove('hidden');
+                dom.inputsSingle.classList.add('hidden');
+            } else {
+                dom.inputsDiff1.classList.add('hidden');
+                dom.inputsSingle.classList.remove('hidden');
+                dom.lblSingleInput.textContent = state.difficulty === 2 ? "Největší společný dělitel" : "Největší dělitel";
+            }
+
             generateProblem();
         }
 
         function generateProblem() {
             state.isRoundAnswered = false;
-            state.divisor = Math.floor(Math.random() * 8) + 2; // 2 - 9
-            state.quotient = Math.floor(Math.random() * 9) + 1; // 1 - 9
-            state.remainder = Math.floor(Math.random() * (state.divisor - 1)) + 1;
-            state.dividend = (state.divisor * state.quotient) + state.remainder;
-
             dom.txtHeaderRound.textContent = `${state.currentRound} / ${state.totalRounds}`;
-            dom.txtDividend.textContent = state.dividend;
-            dom.txtDivisor.textContent = state.divisor;
-
-            dom.inputQuotient.value = '';
-            dom.inputRemainder.value = '';
             dom.boxQuestionInputs.classList.remove('hidden');
             dom.panelFeedback.classList.add('hidden');
+
+            if (state.difficulty === 1) {
+                // LEVEL 1: Division with remainder
+                dom.txtTaskInstruction.textContent = "Vypočítaj podíl a zbytek:";
+                state.divisor = Math.floor(Math.random() * 8) + 2; // 2 - 9
+                state.quotient = Math.floor(Math.random() * 9) + 1; // 1 - 9
+                state.remainder = Math.floor(Math.random() * (state.divisor - 1)) + 1;
+                state.dividend = (state.divisor * state.quotient) + state.remainder;
+
+                dom.boxMathDisplay.innerHTML = `
+                    <span>${state.dividend}</span>
+                    <span style="color: #d97706;">:</span>
+                    <span>${state.divisor}</span>
+                    <span style="color: #d97706;">=</span>
+                    <span style="color: #94a3b8;">?</span>
+                `;
+
+                dom.inputQuotient.value = '';
+                dom.inputRemainder.value = '';
+
+            } else if (state.difficulty === 2) {
+                // LEVEL 2: Greatest Common Divisor of 2 numbers
+                dom.txtTaskInstruction.textContent = "Najdi největšího společného dělitele:";
+                
+                const targetGcd = Math.floor(Math.random() * 11) + 2; // 2..12
+                
+                // Vybíráme násobitele mult1 a mult2 tak, aby byly nesoudělné (gcd=1) 
+                // a Zároveň nebyly po sobě (|mult1 - mult2| > 1), aby dělitel nebyl prostým rozdílem čísel.
+                let mult1 = Math.floor(Math.random() * 7) + 2; // 2..8
+                let mult2 = Math.floor(Math.random() * 7) + 2; // 2..8
+
+                while (gcd(mult1, mult2) !== 1 || Math.abs(mult1 - mult2) <= 1) {
+                    mult1 = Math.floor(Math.random() * 7) + 2;
+                    mult2 = Math.floor(Math.random() * 7) + 2;
+                }
+
+                state.numA = targetGcd * mult1;
+                state.numB = targetGcd * mult2;
+                state.correctAnswer = targetGcd;
+
+                dom.boxMathDisplay.innerHTML = `
+                    <span>${state.numA}</span>
+                    <span style="color: #d97706; font-size: 1.5rem;">a</span>
+                    <span>${state.numB}</span>
+                `;
+
+                dom.inputSingleAnswer.value = '';
+
+            } else if (state.difficulty === 3) {
+                // LEVEL 3: Greatest Divisor of 1 number (divisor must be between 1 and 12)
+                dom.txtTaskInstruction.textContent = "Najdi největšího dělitele (mimo číslo samotné):";
+                
+                // Cílový největší dělitel musí být v rozmezí 1 až 12
+                let chosenNum = 0;
+                let gpd = 0;
+
+                // Opakujeme, dokud nenajdeme číslo, jehož největší vlastní dělitel je v rozmezí 1..12
+                while (gpd < 1 || gpd > 12) {
+                    const targetDivisor = Math.floor(Math.random() * 12) + 1; // 1..12
+                    const multiplier = Math.floor(Math.random() * 3) + 2; // 2, 3 nebo 4
+                    chosenNum = targetDivisor * multiplier;
+                    gpd = getGreatestProperDivisor(chosenNum);
+                }
+
+                state.numA = chosenNum;
+                state.correctAnswer = gpd;
+
+                dom.boxMathDisplay.innerHTML = `
+                    <span style="font-size: 2.5rem;">${state.numA}</span>
+                `;
+
+                dom.inputSingleAnswer.value = '';
+            }
         }
 
         function checkAnswer() {
             if (state.isRoundAnswered) return;
 
-            const userQ = parseInt(dom.inputQuotient.value);
-            const userR = dom.inputRemainder.value === '' ? 0 : parseInt(dom.inputRemainder.value);
+            let isCorrect = false;
 
-            if (isNaN(userQ)) {
-                dom.inputQuotient.classList.add('animate-wiggle');
-                setTimeout(() => dom.inputQuotient.classList.remove('animate-wiggle'), 400);
-                return;
+            if (state.difficulty === 1) {
+                const userQ = parseInt(dom.inputQuotient.value);
+                const userR = dom.inputRemainder.value === '' ? 0 : parseInt(dom.inputRemainder.value);
+
+                if (isNaN(userQ)) {
+                    dom.inputQuotient.classList.add('animate-wiggle');
+                    setTimeout(() => dom.inputQuotient.classList.remove('animate-wiggle'), 400);
+                    return;
+                }
+
+                isCorrect = (userQ === state.quotient) && (userR === state.remainder);
+
+                if (isCorrect) {
+                    dom.txtFeedbackDesc.textContent = `${state.dividend} : ${state.divisor} = ${state.quotient} (zbytek ${state.remainder})`;
+                } else {
+                    dom.txtFeedbackDesc.innerHTML = `Správně: <b>${state.dividend} : ${state.divisor} = ${state.quotient} (zb. ${state.remainder})</b>`;
+                }
+
+            } else {
+                const userVal = parseInt(dom.inputSingleAnswer.value);
+
+                if (isNaN(userVal)) {
+                    dom.inputSingleAnswer.classList.add('animate-wiggle');
+                    setTimeout(() => dom.inputSingleAnswer.classList.remove('animate-wiggle'), 400);
+                    return;
+                }
+
+                isCorrect = (userVal === state.correctAnswer);
+
+                if (state.difficulty === 2) {
+                    if (isCorrect) {
+                        dom.txtFeedbackDesc.textContent = `Největší společný dělitel čísel ${state.numA} a ${state.numB} je ${state.correctAnswer}.`;
+                    } else {
+                        dom.txtFeedbackDesc.innerHTML = `Správně: Největší společný dělitel je <b>${state.correctAnswer}</b>.`;
+                    }
+                } else {
+                    if (isCorrect) {
+                        dom.txtFeedbackDesc.textContent = `Největší dělitel čísla ${state.numA} (mimo ${state.numA}) je ${state.correctAnswer}.`;
+                    } else {
+                        dom.txtFeedbackDesc.innerHTML = `Správně: Největší dělitel čísla ${state.numA} je <b>${state.correctAnswer}</b>.`;
+                    }
+                }
             }
 
             state.isRoundAnswered = true;
-            const isCorrect = (userQ === state.quotient) && (userR === state.remainder);
-
             dom.boxQuestionInputs.classList.add('hidden');
             dom.panelFeedback.classList.remove('hidden');
 
@@ -549,13 +758,11 @@
                 dom.boxBearFeedbackSvg.innerHTML = SVG_BEARS.thumbsUp;
                 dom.txtFeedbackTitle.textContent = "Výborně! 👍";
                 dom.txtFeedbackTitle.style.color = "#10b981";
-                dom.txtFeedbackDesc.textContent = `${state.dividend} : ${state.divisor} = ${state.quotient} (zbytek ${state.remainder})`;
                 triggerConfetti();
             } else {
                 dom.boxBearFeedbackSvg.innerHTML = SVG_BEARS.thumbsDown;
                 dom.txtFeedbackTitle.textContent = "Aha, vedle! 👎";
                 dom.txtFeedbackTitle.style.color = "#ef4444";
-                dom.txtFeedbackDesc.innerHTML = `Správně: <b>${state.dividend} : ${state.divisor} = ${state.quotient} (zb. ${state.remainder})</b>`;
             }
         }
 
