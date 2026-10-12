@@ -2,15 +2,8 @@
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Anglické číslovky s husou</title>
-
-    <!-- PWA / Web App Manifest & Meta tagy pro mobilní telefony -->
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Číslovky">
-    <meta name="theme-color" content="#10b981">
 
     <style>
         * {
@@ -96,25 +89,9 @@
         }
 
         .svg-box {
-            width: 140px;
-            height: 140px;
+            width: 120px;
+            height: 120px;
             margin: 0 auto 8px auto;
-        }
-
-        /* ANIMACE TANČÍCÍ HUSY */
-        @keyframes gooseDance {
-            0% { transform: translateY(0) rotate(0deg) scale(1); }
-            15% { transform: translateY(-16px) rotate(-10deg) scale(1.05); }
-            30% { transform: translateY(0) rotate(10deg) scale(1); }
-            45% { transform: translateY(-14px) rotate(-8deg) scale(1.05); }
-            60% { transform: translateY(0) rotate(8deg) scale(1); }
-            75% { transform: translateY(-6px) rotate(-4deg) scale(1.02); }
-            100% { transform: translateY(0) rotate(0deg) scale(1); }
-        }
-
-        .animate-dance {
-            animation: gooseDance 1.1s ease-in-out infinite;
-            transform-origin: center bottom;
         }
 
         .btn {
@@ -394,7 +371,7 @@
                 } else {
                     const uItem = this.BASE_NUMBERS[u - 1];
                     return {
-                        n: n, czB: `${tensCz[t]}${uItem.czB}`, czON: `${n}.`, czOW: `${tensCzOrd[t]}${uItem.czOW}`,
+                        n: n, czB: `${tensCz[t]} ${uItem.czB}`, czON: `${n}.`, czOW: `${tensCzOrd[t]} ${uItem.czOW}`,
                         enB: `${tensEn[t]}-${uItem.enB}`, enON: `${n}${uItem.enON.slice(-2)}`,
                         root: `${tensEn[t]}-${uItem.root}`, suf: uItem.suf
                     };
@@ -455,4 +432,212 @@
         // === 3. SVGS A EFEKTY ===
         const SVG_GRAPHICS = {
             goose: `<svg viewBox="0 0 200 220" style="width:100%;height:100%;"><path d="M 85 160 L 80 200 L 70 205 M 80 200 L 90 205" stroke="#f97316" stroke-width="6" fill="none"/><path d="M 115 160 L 120 200 L 110 205 M 120 200 L 130 205" stroke="#f97316" stroke-width="6" fill="none"/><ellipse cx="100" cy="135" rx="45" ry="35" fill="#ffffff" stroke="#cbd5e1" stroke-width="3"/><path d="M 125 125 Q 145 70 130 45 C 120 30 100 35 95 50 Q 90 85 105 125 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="3"/><path d="M 100 45 L 75 52 L 98 60 Z" fill="#f97316"/><circle cx="112" cy="46" r="4" fill="#0f172a"/></svg>`,
-            happy: `<svg viewBox="0 0 200 220" style="width:100%;height:100%;"><path d="M 85 160 L 80 200 M 115 160 L 120 200" stroke="#f97316" stroke-width="6" fill="none"/><ellipse cx="100
+            happy: `<svg viewBox="0 0 200 220" style="width:100%;height:100%;"><path d="M 85 160 L 80 200 M 115 160 L 120 200" stroke="#f97316" stroke-width="6" fill="none"/><ellipse cx="100" cy="135" rx="45" ry="35" fill="#ffffff" stroke="#cbd5e1" stroke-width="3"/><path d="M 125 125 Q 145 70 130 45 C 120 30 100 35 95 50 Q 90 85 105 125 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="3"/><path d="M 100 42 L 75 48 L 98 56 Z" fill="#f97316"/><text x="30" y="90" font-size="30">👍</text></svg>`,
+            sad: `<svg viewBox="0 0 200 220" style="width:100%;height:100%;"><path d="M 85 160 L 80 200 M 115 160 L 120 200" stroke="#f97316" stroke-width="6" fill="none"/><ellipse cx="100" cy="140" rx="45" ry="35" fill="#ffffff" stroke="#cbd5e1" stroke-width="3"/><path d="M 125 130 Q 150 90 120 65 C 105 55 90 65 90 75 Q 95 100 105 130 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="3"/><path d="M 95 72 L 70 82 L 95 88 Z" fill="#f97316"/><text x="130" y="100" font-size="30">👎</text></svg>`
+        };
+
+        function launchConfetti() {
+            const canvas = document.getElementById('fxCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            let particles = [];
+            for (let i = 0; i < 30; i++) {
+                particles.push({
+                    x: canvas.width / 2, y: canvas.height / 2,
+                    vx: (Math.random() - 0.5) * 10, vy: (Math.random() - 0.7) * 12,
+                    s: Math.random() * 6 + 4, c: ['#10b981', '#f59e0b', '#3b82f6'][Math.floor(Math.random() * 3)], l: 80
+                });
+            }
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                let alive = false;
+                particles.forEach(p => {
+                    if (p.l > 0) {
+                        alive = true; p.x += p.vx; p.y += p.vy; p.vy += 0.3; p.l--;
+                        ctx.fillStyle = p.c; ctx.fillRect(p.x, p.y, p.s, p.s);
+                    }
+                });
+                if (alive) requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        // === 4. UI ŘÍZENÍ A APLIKAČNÍ LOGIKA ===
+        class AppUI {
+            constructor() {
+                this.game = new GameEngine();
+                this.initDOM();
+                this.bindEvents();
+                this.renderStudyTable();
+            }
+
+            initDOM() {
+                this.dom = {
+                    setupStage: document.getElementById('stageSetup'),
+                    gameStage: document.getElementById('stageGame'),
+                    summaryStage: document.getElementById('stageSummary'),
+                    headerProgress: document.getElementById('headerProgress'),
+                    txtHeaderRound: document.getElementById('txtHeaderRound'),
+                    boxSetupGoose: document.getElementById('boxSetupGoose'),
+                    btnToggleStudy: document.getElementById('btnToggleStudy'),
+                    boxStudyTable: document.getElementById('boxStudyTable'),
+                    tableBody: document.getElementById('tableBody'),
+                    txtQuestion: document.getElementById('txtQuestion'),
+                    inputAnswer: document.getElementById('inputAnswer'),
+                    boxInputs: document.getElementById('boxInputs'),
+                    panelFeedback: document.getElementById('panelFeedback'),
+                    boxFeedbackSvg: document.getElementById('boxFeedbackSvg'),
+                    txtFeedbackTitle: document.getElementById('txtFeedbackTitle'),
+                    txtFeedbackDesc: document.getElementById('txtFeedbackDesc'),
+                    boxFinalSvg: document.getElementById('boxFinalSvg'),
+                    txtFinalTitle: document.getElementById('txtFinalTitle'),
+                    txtFinalSubtitle: document.getElementById('txtFinalSubtitle'),
+                    txtScore: document.getElementById('txtScore'),
+                    txtAccuracy: document.getElementById('txtAccuracy'),
+                    btnStart: document.getElementById('btnStart'),
+                    btnSubmit: document.getElementById('btnSubmit'),
+                    btnNext: document.getElementById('btnNext'),
+                    btnRestart: document.getElementById('btnRestart'),
+                    btnHome: document.getElementById('btnHome')
+                };
+
+                this.dom.boxSetupGoose.innerHTML = SVG_GRAPHICS.goose;
+            }
+
+            bindEvents() {
+                // Přepínání voleb (Task, Range, Rounds)
+                document.querySelectorAll('.btn-opt').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const type = e.target.getAttribute('data-type');
+                        const val = e.target.getAttribute('data-val');
+
+                        // Vizuální aktivace ve své skupině
+                        e.target.parentElement.querySelectorAll('.btn-opt').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+
+                        // Uložení nastavení
+                        if (type === 'task') this.game.taskType = val;
+                        if (type === 'range') this.game.maxRange = parseInt(val);
+                        if (type === 'rounds') this.game.totalRounds = parseInt(val);
+                    });
+                });
+
+                // Zobrazení / Skrytí tabulky
+                this.dom.btnToggleStudy.onclick = () => {
+                    this.dom.boxStudyTable.classList.toggle('hidden');
+                };
+
+                // Tlačítka pro postup hrou
+                this.dom.btnStart.onclick = () => this.startGame();
+                this.dom.btnSubmit.onclick = () => this.handleCheck();
+                this.dom.btnNext.onclick = () => this.handleNext();
+                this.dom.btnRestart.onclick = () => this.showSetup();
+                this.dom.btnHome.onclick = () => this.showSetup();
+
+                // Odpověď klávesou Enter
+                this.dom.inputAnswer.onkeyup = (e) => {
+                    if (e.key === 'Enter') this.handleCheck();
+                };
+            }
+
+            renderStudyTable() {
+                let html = '';
+                for (let i = 1; i <= 21; i++) {
+                    const item = NumberData.get(i);
+                    html += `<tr><td><b>${item.n}</b></td><td>${item.enB}</td><td>${item.root}<span class="suffix">${item.suf}</span></td></tr>`;
+                }
+                this.dom.tableBody.innerHTML = html;
+            }
+
+            showSetup() {
+                this.dom.gameStage.classList.add('hidden');
+                this.dom.summaryStage.classList.add('hidden');
+                this.dom.headerProgress.classList.add('hidden');
+                this.dom.setupStage.classList.remove('hidden');
+            }
+
+            startGame() {
+                this.game.reset();
+                this.dom.setupStage.classList.add('hidden');
+                this.dom.summaryStage.classList.add('hidden');
+                this.dom.gameStage.classList.remove('hidden');
+                this.dom.headerProgress.classList.remove('hidden');
+                this.renderQuestion();
+            }
+
+            renderQuestion() {
+                this.dom.txtHeaderRound.textContent = `${this.game.currentRound} / ${this.game.totalRounds}`;
+                this.dom.boxInputs.classList.remove('hidden');
+                this.dom.panelFeedback.classList.add('hidden');
+                this.dom.inputAnswer.value = '';
+
+                const item = this.game.nextQuestion();
+                if (this.game.taskType === 'base') this.dom.txtQuestion.textContent = item.czB;
+                if (this.game.taskType === 'ord-num') this.dom.txtQuestion.textContent = item.czON;
+                if (this.game.taskType === 'ord-word') this.dom.txtQuestion.textContent = item.czOW;
+
+                this.dom.inputAnswer.focus();
+            }
+
+            handleCheck() {
+                const answer = this.dom.inputAnswer.value;
+                if (!answer.trim()) return;
+
+                const result = this.game.check(answer);
+
+                this.dom.boxInputs.classList.add('hidden');
+                this.dom.panelFeedback.classList.remove('hidden');
+
+                if (result.isCorrect) {
+                    this.dom.boxFeedbackSvg.innerHTML = SVG_GRAPHICS.happy;
+                    this.dom.txtFeedbackTitle.textContent = "Správně! 👍";
+                    this.dom.txtFeedbackTitle.style.color = "#10b981";
+                    this.dom.txtFeedbackDesc.innerHTML = `Odpověď: <b>${result.formattedDisplay}</b>`;
+                    launchConfetti();
+                } else {
+                    this.dom.boxFeedbackSvg.innerHTML = SVG_GRAPHICS.sad;
+                    this.dom.txtFeedbackTitle.textContent = "Aha, vedle! 👎";
+                    this.dom.txtFeedbackTitle.style.color = "#ef4444";
+                    this.dom.txtFeedbackDesc.innerHTML = `Správně mělo být: <b>${result.formattedDisplay}</b>`;
+                }
+            }
+
+            handleNext() {
+                if (this.game.isFinished()) {
+                    this.showSummary();
+                } else {
+                    this.game.currentRound++;
+                    this.renderQuestion();
+                }
+            }
+
+            showSummary() {
+                this.dom.gameStage.classList.add('hidden');
+                this.dom.headerProgress.classList.add('hidden');
+                this.dom.summaryStage.classList.remove('hidden');
+
+                const acc = Math.round((this.game.score / this.game.totalRounds) * 100);
+                this.dom.txtScore.textContent = `${this.game.score} / ${this.game.totalRounds}`;
+                this.dom.txtAccuracy.textContent = `${acc} %`;
+
+                if (acc >= 70) {
+                    this.dom.boxFinalSvg.innerHTML = SVG_GRAPHICS.happy;
+                    this.dom.txtFinalTitle.textContent = "Výborně! Husa má radost! 🪿💃";
+                    this.dom.txtFinalSubtitle.textContent = "Zvládl(a) jsi to skvěle!";
+                    launchConfetti();
+                } else {
+                    this.dom.boxFinalSvg.innerHTML = SVG_GRAPHICS.sad;
+                    this.dom.txtFinalTitle.textContent = "Pěkný pokus! 👍";
+                    this.dom.txtFinalSubtitle.textContent = "Procvičuj dále a příště to bude super!";
+                }
+            }
+        }
+
+        // Spuštění aplikace po načtení dokumentu
+        window.addEventListener('DOMContentLoaded', () => {
+            new AppUI();
+        });
+    </script>
+</body>
+</html>
