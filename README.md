@@ -6,7 +6,7 @@ Morseovka procvičuje prijímání písmen morseovy abecedy. (Zatím nefunguje o
 
 Postup pro instalaci a spuštění: 
 1. stáhnout html soubor do zařízení.
-2. vytvořit zástupne html souboru na ploše.
+2. vytvořit zástupce html souboru na ploše.
 3. Klihnutím spustit html soubor v prohlížeči.
 
 
