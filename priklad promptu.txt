@@ -1,0 +1,43 @@
+Vytvoř kompletní html aplikaci pro děti pro procvičování matematiky v jednom samostatném HTML souboru (včetně CSS a JavaScriptu), která funguje jako offline PWA pro mobilní telefony.
+
+### 🎨 Téma a Vzhled:
+- Aplikací provází animovaná koala (veškeré grafické prvky nakresli pomocí čistého SVG bez externích obrázků).
+- BAREVNÁ PALETA: Svěží zelená (#10b981), světle modrá (#e0f2fe) a jemné pastelové tóny vhodné pro děti.
+- DESIGN: Moderní, zakulacené karty (border-radius: 24px), velké dotykové prvky přizpůsobené pro mobilní telefony, responsivní layout, bez externích knihoven.
+
+### ⚙️ Úvodní nastavení (Stage 1):
+1. Hlavička s logem koaly a názvem "Matematika s koalou".
+2. Úvodní přivítání s obrázkem celé koaly.
+3. Výběr typu úlohy (stiskem tlačítka):
+   - Největší společný dělitel dvou čísel
+   - Největší dělitel (mimo číslo samotné)
+   - Dělení se zbytkem (hledání podílu a zbytku)
+4. Výběr počtu příkladů v sérii: 5, 10 nebo 15.
+5. Tlačítko "SPUSTIT HRU".
+
+### 🎮 Průběh hry (Stage 2):
+- Zobrazení aktuálního kola (např. "Kolo: 1 / 5").
+- Dynamické zadání příkladu na světlém pozadí:
+  * Pro "Největší společný dělitel": vygeneruj 2 čísla (např. 12 a 30). Zajisti, aby jejich násobitele nebyly po sobě jidoucí, aby nešlo dělitel zjistit prostým odečtením čísel.
+  * Pro "Největší dělitel": vygeneruj 1 číslo, jehož největší vlastní dělitel je v rozmezí 1 až 12.
+  * Pro "Dělení se zbytkem": zobraz dělení (např. 17 : 5 = ?), kde vstupem jsou 2 pole: Podíl a Zbytek (inputmode="numeric").
+- Tlačítko "ZKONTROLOVAT".
+
+### 💬 Zpětná vazba po každém příkladu:
+- Po vyhodnocení skryj vstupy a ukaž panel zpětné vazby:
+  * Pokud SPRÁVNĚ: Zobraz CELOU veselou koalu se zvednutým palcem nahoru (👍), zelený text "Výborně!" a spusť efekt konfet.
+  * Pokud ŠPATNĚ: Zobraz CELOU smutnou koalu s palcem dolů (👎), červený text "Aha, vedle!" a vypiš správné řešení.
+- Tlačítko "DALŠÍ PŘÍKLAD ➔".
+
+### 🏆 Závěrečné vyhodnocení (Stage 3):
+- Přehled výsledků: Celkové skóre a úspěšnost v procentech.
+- Speciální animace:
+  * Pokud je úspěšnost 70 % a více: Zobraz CELOU TANČÍCÍ KOALU (animovanou pomocí CSS keyframes – výskoky, mávání ušima/rukama, noty v pozadí), nadpis "Výborně! Koala tančí! 🐨💃" a konfety.
+  * Pokud je úspěšnost pod 70 %: Zobraz smutnou koalu a povzbuzující text.
+- Tlačítko "HRÁT ZNOVU".
+
+### 📱 Technické požadavky:
+- Vše v 1 souboru (HTML + CSS + JS).
+- Žadné externí skripty, fonty ani knihovny (Offline PWA ready).
+- Integrovaný jednoduchý Service Worker registrovaný přes Blob URL.
+- Nativní JS konfetový efekt vykreslovaný na HTML5 Canvas.
